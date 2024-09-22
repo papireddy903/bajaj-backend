@@ -12,6 +12,7 @@ def process_file(file_b64):
     try:
         # Decode the base64 string to get the file data
         file_data = base64.b64decode(file_b64)
+        print("Decoded File Data:", file_data)
         
         # Assuming files are stored temporarily for validation
         temp_file_path = "temp_file"
@@ -22,12 +23,21 @@ def process_file(file_b64):
         file_valid = True
 
         # Use `magic` to detect the MIME type
-        mime = magic.Magic(mime=True)
-        file_mime_type = mime.from_file(temp_file_path)
+        try:
+            # Specify the magic file path if necessary
+            mime = magic.Magic(mime=True)
+            file_mime_type = mime.from_file(temp_file_path)
+        except Exception as e:
+            print(f"Magic error: {e}")
+            file_mime_type = "unknown/unknown"
+        
+        print(f"File MIME Type: {file_mime_type}")
         
         # Calculate file size in KB
         file_size_kb = os.path.getsize(temp_file_path) / 1024
 
+        print(f"File Size (KB): {file_size_kb}")
+        
         # Remove the temporary file after processing
         os.remove(temp_file_path)
         
